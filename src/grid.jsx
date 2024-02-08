@@ -260,7 +260,7 @@ export function Datagrid(opt) {
             grid ={cell_data}  
             />);
         let inp = document.getElementById('addcol')
-        if (!(typeof inp.value == '')){
+        if (!(typeof inp.value === '')){
             inp.value = ' '
         }    
         let getcol=document.getElementById('popup')
