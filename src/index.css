@@ -1,0 +1,96 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* color-scheme: light; */
+  color: rgba(255, 255, 255, 0.87);
+  background-image:linear-gradient(rgb(182, 182, 230) ,rgb(223, 200, 223),rgb(248, 246, 246));
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fileInput {
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 500px;
+  left: 50%;
+  /* transform:translate(125%,50%) ; */
+  border: dotted rgb(26, 25, 25);
+  color: black;
+  transition: height 0.3ms ;
+}
+
+.fileinputSmall {
+  /* transform: scale(0.3); */
+  /* left: 0%; */
+  font-size: large;
+  /* width: fit-content; */
+  height :50px
+}
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: block;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  /* background-color: rgb(58, 79, 109); */
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: inherit;
+  border: 0.5px ;
+  padding: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  background-color:transparent;
+  cursor: pointer;
+  color: rgb(25, 118, 210);
+  transition: border-color 0.25s ;
+}
+button:hover {
+  border-color: #646cff;
+  background-color: inherit;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+#grid {
+  position: relative;
+  margin-top: 15px;
+}
