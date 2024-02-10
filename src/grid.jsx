@@ -25,28 +25,41 @@ let notes = ReactDOM.createRoot(notes_div)
 let nos_cols = 0
 
 const get_type = (content) =>{
+    content =content.replace(/,/g, '')
     if (isNaN(content)) {return ('string')}
     else { return ('number')}
 
 }
+const obtainsampledata = (dataset)=>{
+    let x = 0
+    while ( x <= dataset.length) {
+    let sample = dataset[x]    
+    if (!(sample.includes('') || sample.includes(' '))){
+        return sample
+        }
+    x+=1
+    }
+}
 export async function processdata(data,ext) {   
     if (!(ext ==='json')){
     // console.log(csvtext)
-    var data =  papaparse.parse(data)
+    var data =  await papaparse.parse(data)
     var griddata = [data['data']][0]
     headers  = griddata[0]
     var actual_data= griddata.slice(1)
-    let sampledata = actual_data[1]
+    let x =0
+    let sampledata = obtainsampledata(actual_data)
     var new_headers = []
     headers.forEach(element => {
+        let headname =element
         let len = element.split(' ').length
         if (len>1){
-            element = element.split(' ').join('_')
+            headname = element.split(' ').join('_')
         }
-        columnDefs.push({headerName:element ,field: element, minWidth : null, editable : true,type : get_type(sampledata[headers.indexOf(element)]), headerClassName : 'grid-header'})
-        coldefs[element] = '' 
-        new_headers.push(element)
-        notesdict[element]={}   
+        columnDefs.push({headerName:headname ,field: headname, minWidth : null, editable : true,type : get_type(sampledata[headers.indexOf(element)]), headerClassName : 'grid-header'})
+        coldefs[headname] = '' 
+        new_headers.push(headname)
+        notesdict[headname]={}   
     });
     headers = new_headers
 
@@ -151,9 +164,8 @@ export function Datagrid(opt) {
             const recordnotes=() => {
                 notesdef[params.field][params.id]=notes_value.value
                 update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
-                var x = ' '
             }
-            await pop.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} />)
+            await pop.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
             let notes_value = document.getElementById('Notes')
             
             if (Object.keys(notesdef[params.field]).includes(String(params.id))){
@@ -173,6 +185,7 @@ export function Datagrid(opt) {
         return (
             <GridToolbarContainer>
                 <GridToolbar />
+                <Button desc = 'AUTOFIT' function={() => Apiref.current.autosizeColumns(autosizeOptions)} />
                 <Button desc = 'ADD COLUMNS' function = {AddCol} />
                 <Button desc ='SAVE' function = {saveasJSON} id='download' />
                 <Input ID = 'Formula' width = 'fit-content' height = '25px' margin = '5px' fsize = '18px' value = {cell_data}/>
@@ -316,10 +329,10 @@ export function Datagrid(opt) {
     //     GridApi.exportDataAsCsv()
     // } 
     const autosizeOptions = {
-        includeHeaders,
-        includeOutliers,
-        outliersFactor: Number.isNaN(parseFloat(outliersFactor))? 1 : parseFloat(outliersFactor),
-        expand,
+        includeHeaders:true,
+        includeOutliers:false,
+        // outliersFactor: Number.isNaN(parseFloat(outliersFactor))? 1 : parseFloat(outliersFactor),
+        // expand,
     }; 
     const generateAggregationModel =(head,f={})=>{
         // let func = ['sum','avg','max','min','size']

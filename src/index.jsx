@@ -11,7 +11,6 @@ import './index.css';
 const griddiv = ReactDOM.createRoot(document.getElementById('grid'));
 const form = ReactDOM.createRoot(document.getElementById('form'));
 
-
 form.render(
 <React.StrictMode>
   <div className='fileInput' id='fileInput'>
@@ -20,8 +19,6 @@ form.render(
     </DndProvider>
   </div>
 </React.StrictMode>);
-
-
 
 export function Displaygrid(){
   let dragspace = document.getElementById('fileInput')

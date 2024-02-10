@@ -260,3 +260,49 @@
   border: 2px solid;
   background-image: linear-gradient(rgb(241, 223, 223),rgb(139, 125, 125));
 }
+
+.sidebar {
+  left :80%;
+  right: 2px;
+  top: 0;
+  margin-top: 15px;
+  border: 2px solid rgb(75, 74, 74);
+  box-shadow: -6px 1px 10px 3px rgba(180, 145, 145, 0.616);
+  width: 100%;
+
+  height: 90%;
+  align-items: left;
+  justify-content:center ;
+  position: absolute;
+  background-color: aqua;
+  border-radius: 5px;
+  scale: 0.1;
+  transition: scale 0.2s;
+  visibility: hidden;
+  /* z-index:3; */
+}
+.open-sidebar {
+  scale: 1;
+  visibility: visible;
+}
+#exitdiv {
+display:block;
+align-items: end;
+justify-content: end;
+width:auto;
+}
+#exit {
+  border-radius: 50px;
+  background-color: red;
+  color: white;
+  right: 0;
+  top: 0;
+  height: 25px;
+  width: 25px;
+
+}
+
+.NotesPopupBtn {
+  display:flexbox;
+  flex-wrap: nowrap;
+}

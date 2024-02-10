@@ -1,8 +1,10 @@
 import React ,{useState,useCallback} from 'react'
+import ReactDOM from 'react-dom/client'
 import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { useMemo } from 'react'
 import {processdata} from './grid'
+import { Sidebar } from './sidebar';
 
 import './App.css'
 
@@ -233,7 +235,8 @@ export  function Button(opt){
 }
 
 export function Notes(opt){
-    //props:{onclick,id,function,parentId}
+    //props:{onclick,id,function,parentId,sidebarID}
+    const side = ReactDOM.createRoot(document.getElementById(opt.SidebarID))
     function closepop() {
         let input = document.getElementById(opt.ID)
         if (!(typeof opt.parentId === 'undefined')){
@@ -246,6 +249,11 @@ export function Notes(opt){
         opt.onclick(); 
     }
 
+    async function notesSidebar() {
+        
+        await side.render(<Sidebar parentID = {opt.SidebarID} /> )
+        document.getElementById('sidebar').classList.add('open-sidebar')
+    }
     return (
         <>
         <div className='exitButton'>
@@ -253,7 +261,10 @@ export function Notes(opt){
         </div>
         <label htmlFor="Notes">Notes</label>
         <textarea name="Notes" id="Notes" ></textarea>
-        <Button function = {closeNsubmit} id = {opt.id} desc ='SUBMIT'/>
+        <div className='NotesPopupBtn'>
+            <Button function = {notesSidebar} id = {opt.id} desc ='View History'/>
+            <Button function = {closeNsubmit} id = {opt.id} desc ='SUBMIT'/>
+        </div>
         </>
     )
 }
