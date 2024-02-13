@@ -236,7 +236,7 @@ export  function Button(opt){
 
 export function Notes(opt){
     //props:{onclick,id,function,parentId,sidebarID}
-    const side = ReactDOM.createRoot(document.getElementById(opt.SidebarID))
+    // const side = ReactDOM.createRoot(document.getElementById(opt.SidebarID))
     function closepop() {
         let input = document.getElementById(opt.ID)
         if (!(typeof opt.parentId === 'undefined')){
@@ -256,13 +256,10 @@ export function Notes(opt){
     }
     return (
         <>
-        <div className='exitButton'>
-            <button type = 'button' onClick = {closepop}></button>
-        </div>
-        <label htmlFor="Notes">Notes</label>
-        <textarea name="Notes" id="Notes" ></textarea>
+        <label htmlFor="notestext" className='noteslabel'>Notes</label>
+        <textarea name="notestext" id="notestext" ></textarea>
         <div className='NotesPopupBtn'>
-            <Button function = {notesSidebar} id = {opt.id} desc ='View History'/>
+            {/* <Button function = {notesSidebar} id = {opt.id} desc ='View History'/> */}
             <Button function = {closeNsubmit} id = {opt.id} desc ='SUBMIT'/>
         </div>
         </>

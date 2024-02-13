@@ -1,29 +1,43 @@
 import React ,{useEffect,useState} from 'react'
 import ReactDOM from 'react-dom/client';
 import Box from '@mui/material/Box';
-import fs from 'fs'
 import {Button,Input,AddcolPopup,Notes} from './inputs.jsx'
+import { Sidebar } from './sidebar.jsx';
 import { DataGridPremium ,
     GridToolbarContainer,
     GridToolbar,useGridApiContext,
     DEFAULT_GRID_AUTOSIZE_OPTIONS
-    } from '@mui/x-data-grid-premium'
+    } from '@mui/x-data-grid-premium';
 import {Displaygrid} from './index.jsx'
 import papaparse  from 'papaparse'
-import { clsx } from 'clsx'
 import './App.css'
 
+// globalvars
+let baseURL = 'https://chrysrex.pythonanywhere.com/'
 var columnDefs = []
 var rowData = []
 var headers = []
 var coldefs = {}
-var notesdict = {}
+let notesdict = {}
+
+// global div elements/react roots
+
+const side = ReactDOM.createRoot(document.getElementById('sidebar'))
 const pop = ReactDOM.createRoot(document.getElementById('popup'));
 let head_list  = document.getElementById('headerslist')
 let notes_div = document.getElementById('notes')
 let notes = ReactDOM.createRoot(notes_div)
 let nos_cols = 0
 
+// API requests
+const time_reqOptions = {
+    method : 'GET',
+    'Access-Control-Allow-Origin' : '*'
+}
+const time_req = new Request(baseURL+'/time',time_reqOptions)
+
+
+// fUnctions
 const get_type = (content) =>{
     content =content.replace(/,/g, '')
     if (isNaN(content)) {return ('string')}
@@ -137,7 +151,15 @@ export function Datagrid(opt) {
         );
     const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
     
+    function clearChild(parent){
+        let child =parent.lastElementChild;
+        while (child){
+            parent.removeChild(child)
+            child = parent.lastElementChild
+        }
+    }
     const handleCellClick = (params,event) =>{
+        
         notes_div.style.visibility = 'hidden'
         Set_cellfield(params.field)
         Set_cellID(params.id)
@@ -157,27 +179,95 @@ export function Datagrid(opt) {
             notes_div.style.top = top
             notes.render(<Button function = {displaynotes} id='notesbutton' desc = '+'/>)
             console.log('notes triigeres')
-        }        
-    
+        }   
+
         async function displaynotes() {
-            
-            const recordnotes=() => {
-                notesdef[params.field][params.id]=notes_value.value
-                update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
-            }
-            await pop.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
-            let notes_value = document.getElementById('Notes')
-            
-            if (Object.keys(notesdef[params.field]).includes(String(params.id))){
-                notes_value.value = notesdef[params.field][params.id]
-            }
-            else {notes_value.value = ''}
-            
             notes_div.style.visibility = 'hidden'
+            let notes_length = '9'
+            const recordnotes=async () => {
+                        if (notesdef[params.field][params.id] === undefined){
+                            console.log('redefining')
+                            notesdef[params.field][params.id] = []
+                        }
+                        let cur_time = await fetch(time_req,time_reqOptions)
+                        let data = await cur_time.json()
+                        console.log(data)
+                        notesdef[params.field][params.id].push(`${notes_value.value};;;${data["date"]};;;${data["time"]}`)
+                        update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
+                        console.log('noted')
+                        document.getElementById('sidebar').classList.remove('open-sidebar')
+                        // new_notes.unmount()
+                        }
+                        
+
+            await side.render(<Sidebar parentID = 'sidebar' record = {recordnotes} /> )
+            let notes_value = document.getElementById('notestext')
+            notes_value.value = ''
+            const notesdiv = document.getElementById('notessection')
+            clearChild(notesdiv)
+            console.log('notesdef',notesdef)
+            // new_notes= ReactDOM.createRoot(document.getElementById('new_notes'))
+            if (Object.keys(notesdef[params.field]).includes(String(params.id))){
+                console.log('notesfound',notesdef[params.field][params.id])
+                
+                let usernotes_full = JSON.parse(JSON.stringify(notesdef[params.field][params.id]))
+                console.log(usernotes_full)
+                let i = notes_length
+                let notecount = 0
+                usernotes_full.reverse()
+                let usernotes = usernotes_full.slice(0,notes_length)
+                let len = usernotes.length
+                console.log(usernotes)
+                while(i>0 && len>notecount){
+                    console.log('condition',(i>0 && usernotes.length>notecount))
+                    let note = usernotes.pop()
+                    let note_arr =note.split(';;;')
+                    note = note_arr[0]
+                    let date = note_arr[1]
+                    let time = note_arr[2]
+                    let div = document.createElement('div')
+                    let text = document.createElement('textarea')
+                    text.value = note
+                    let datetime = document.createElement('label')
+                    datetime.innerText = `${date} ${time}`
+                    datetime.setAttribute('readonly',true)
+                    text.setAttribute('readonly','true')
+                    div.appendChild(text)
+                    div.appendChild(datetime)
+                    notesdiv.appendChild(div)
+                    i--
+                    notecount++
+                }
+            }
             
-            let notespopup = document.getElementById('popup')
-            notespopup.classList.add('open-popup')
+            
+            // new_notes.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
+            
+            document.getElementById('sidebar').classList.add('open-sidebar')
+
         }
+        
+
+    
+        // async function displaynotes() {
+            
+        //     const recordnotes=() => {
+        //         notesdef[params.field][params.id]=notes_value.value
+        //         update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
+        //     }
+        //     await pop.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
+        //     let notes_value = document.getElementById('Notes')
+            
+        //     if (Object.keys(notesdef[params.field]).includes(String(params.id))){
+        //         notes_value.value = notesdef[params.field][params.id]
+        //     }
+        //     else {notes_value.value = ''}
+            
+        //     notes_div.style.visibility = 'hidden'
+            
+        //     let notespopup = document.getElementById('popup')
+        //     notespopup.classList.add('open-popup')
+        // }
     }    
 
     function CustomToolbar() {
@@ -196,6 +286,8 @@ export function Datagrid(opt) {
         function details(){
             console.log('coldata' ,Apiref.current.getAllColumns())
             console.log('rowmodel',Apiref.current.getRowModels())
+            console.log('notes',notesdef)
+
 
         }
         async function Editcell(){
@@ -240,7 +332,7 @@ export function Datagrid(opt) {
         
         }
 
-        function saveasJSON(){
+        async function saveasJSON(){
             let rowdef = Apiref.current.getRowModels()
             rowdef = [...rowdef.values()]
             // let coldef = Apiref.current.getDataAsCsv() 
@@ -248,8 +340,16 @@ export function Datagrid(opt) {
             var head = Object.keys(rowdef[0])
             let savedJson = {coldef : head , rows : rowdef ,formula : coldefs , colformat :colformat ,notes:notesdef}
             let filename = document.title.split('.').slice(0,document.title.split('.').length -1) + '.json'
-        
-            download(savedJson,filename)
+            let param = '/save'
+            let myOptions = {
+                method : 'POST',
+                body : JSON.stringify({data:savedJson,file:filename}),
+                'Access-Control-Allow-Origin': '*',
+            }
+            let req = new Request(baseURL+param,myOptions)  
+            const response = await fetch(req)
+            console.log(response)  
+            // download(savedJson,filename)
             // console.log(colformat)
         }
         function download(data,file,type = 'text/plain'){
@@ -346,6 +446,7 @@ export function Datagrid(opt) {
     return (
         <Box sx={{ height: '95%', width: '100%' , zIndex : 0 }} >
         <DataGridPremium 
+            rowHeight={25}
             onCellClick={handleCellClick}
             experimentalFeatures={{ ariaV7: false }}
             rows={rows}

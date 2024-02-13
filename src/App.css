@@ -73,8 +73,8 @@
   top: 0%;
   left: 50%;
   transform: translate(-50%,-50%) scale(0.1);
-  background-color: rgb(173, 231, 233,1);
-  color: rgb(19, 18, 18, 0.9);
+  background-color: rgb(12, 17, 39,0.5);
+  color: rgba(255, 255, 255, 0.9);
   position: absolute;
   align-items:center;
   justify-content:space-between;
@@ -257,8 +257,8 @@
 }
 
 .noted {
-  border: 2px solid;
-  background-image: linear-gradient(rgb(241, 223, 223),rgb(139, 125, 125));
+  border: 2px solid rgb(12, 17, 39) ;
+  background-image: linear-gradient(rgb(241, 223, 223,0.5),rgb(12, 17, 39,0.5));
 }
 
 .sidebar {
@@ -268,13 +268,14 @@
   margin-top: 15px;
   border: 2px solid rgb(75, 74, 74);
   box-shadow: -6px 1px 10px 3px rgba(180, 145, 145, 0.616);
-  width: 100%;
-
+  /* width: 100%; */
+  gap: 15px;
+  display:grid;
   height: 90%;
   align-items: left;
   justify-content:center ;
   position: absolute;
-  background-color: aqua;
+  background-color: rgb(12, 17, 39);
   border-radius: 5px;
   scale: 0.1;
   transition: scale 0.2s;
@@ -289,7 +290,10 @@
 display:block;
 align-items: end;
 justify-content: end;
-width:auto;
+width:25px;
+height: 25px;
+left: 0;
+position:inherit;
 }
 #exit {
   border-radius: 50px;
@@ -302,7 +306,68 @@ width:auto;
 
 }
 
-.NotesPopupBtn {
-  display:flexbox;
+.NotesPopupBtn{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+#notespopup {
+  background-image: linear-gradient(rgb(52, 95, 128),rgb(111, 133, 155),rgb(104, 124, 139));
+  border-radius: 5px;
+  color: White;
+  width: fit-content;
+
+}
+#notespopup:hover {
+  border-radius: unset;
+  background-color: blue;
+  background-image: none;
+}
+#notestext {
+  height: 50px;
+  width: auto;
+}
+
+#new_notes {
+  font-size: large;
+  font-weight: bold ;
+  height: 25%;
+  width: 100%;
+  display:grid;
+  bottom: 15px;
+  position: inherit;
+  color: rgb(237, 237, 243);
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 15px;
+}
+#notessection {
+  height: fit-content;
+  top: 5%;
+  position: sticky;
+  display: grid;
+  gap: 15px;
+  margin-top: 75px;
+}
+
+.noteslabel {
+display: grid;
+/* position: inherit; */
+justify-content: center;
+text-align: center;
+}
+#notessection div {
+  height: fit-content;
+  width: 100%;
+  display: grid;
+  color: rgb(199, 194, 194);
+  font-size: x-small;
+}
+#notessection textarea {
+  height: fit-content;
+  width:inherit;
+  display: flex;
   flex-wrap: nowrap;
+  border-radius: 5px;
 }
