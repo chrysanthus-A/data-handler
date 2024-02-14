@@ -45,6 +45,13 @@ const get_type = (content) =>{
     else { return ('number')}
 
 }
+export function clearChild(parent){
+    let child =parent.lastElementChild;
+    while (child){
+        parent.removeChild(child)
+        child = parent.lastElementChild
+    }
+}
 const obtainsampledata = (dataset)=>{
     let x = 0
     while ( x <= dataset.length) {
@@ -152,15 +159,22 @@ export function Datagrid(opt) {
         );
     const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
     
-    function clearChild(parent){
-        let child =parent.lastElementChild;
-        while (child){
-            parent.removeChild(child)
-            child = parent.lastElementChild
-        }
-    }
-    const handleCellClick = (params,event) =>{
-        
+    
+    const handleCellClick = async (params,event) =>{
+        const recordnotes=async () => {
+            if (notesdef[params.field][params.id] === undefined){
+                notesdef[params.field][params.id] = []
+            }
+            let cur_time = await fetch(time_req,time_reqOptions)
+            let data = await cur_time.json()
+            notesdef[params.field][params.id].push(`${notes_value.value};;;${data["date"]};;;${data["time"]}`)
+            update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
+            handleCellClick(params,event='')
+            // document.getElementById('sidebar').classList.remove('open-sidebar')
+            }
+
+        await side.render(<Sidebar parentID = 'sidebar' record = {recordnotes} notes = {notesdef} cell_field={params.field} cell_id = {params.id} /> )
+        let notes_value = document.getElementById('notestext')
         notes_div.style.visibility = 'hidden'
         Set_cellfield(params.field)
         Set_cellID(params.id)
@@ -171,7 +185,9 @@ export function Datagrid(opt) {
         else {
             Set_cellData(coldefs[params.field])
         }
-        
+        if (!(event ==='')){
+            document.getElementById('sidebar').classList.remove('open-sidebar') 
+        }
         if (event.ctrlKey){
             var left = String(event.clientX) + 'px'
             var top = String(event.clientY) + 'px'
@@ -179,76 +195,13 @@ export function Datagrid(opt) {
             notes_div.style.left = left
             notes_div.style.top = top
             notes.render(<Button function = {displaynotes} id='notesbutton' desc = '+'/>)
-            console.log('notes triigeres')
         }   
 
         async function displaynotes() {
-            notes_div.style.visibility = 'hidden'
-            let notes_length = '9'
-            const recordnotes=async () => {
-                        if (notesdef[params.field][params.id] === undefined){
-                            console.log('redefining')
-                            notesdef[params.field][params.id] = []
-                        }
-                        let cur_time = await fetch(time_req,time_reqOptions)
-                        let data = await cur_time.json()
-                        console.log(data)
-                        notesdef[params.field][params.id].push(`${notes_value.value};;;${data["date"]};;;${data["time"]}`)
-                        update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
-                        console.log('noted')
-                        document.getElementById('sidebar').classList.remove('open-sidebar')
-                        // new_notes.unmount()
-                        }
-                        
-
-            await side.render(<Sidebar parentID = 'sidebar' record = {recordnotes} /> )
-            let notes_value = document.getElementById('notestext')
+            notes_div.style.visibility = 'hidden'            
             notes_value.value = ''
-            const notesdiv = document.getElementById('notessection')
-            clearChild(notesdiv)
-            console.log('notesdef',notesdef)
-            // new_notes= ReactDOM.createRoot(document.getElementById('new_notes'))
-            if (Object.keys(notesdef[params.field]).includes(String(params.id))){
-                console.log('notesfound',notesdef[params.field][params.id])
-                
-                let usernotes_full = JSON.parse(JSON.stringify(notesdef[params.field][params.id]))
-                console.log(usernotes_full)
-                let i = notes_length
-                let notecount = 0
-                usernotes_full.reverse()
-                let usernotes = usernotes_full.slice(0,notes_length)
-                let len = usernotes.length
-                console.log(usernotes)
-                let div = document.createElement('div')
-                let text = document.createElement('textarea')
-                let value =''
-                while(i>0 && len>notecount){
-                    console.log('condition',(i>0 && usernotes.length>notecount))
-                    let note = usernotes.pop()
-                    let note_arr =note.split(';;;')
-                    note = note_arr[0]
-                    let date = note_arr[1]
-                    let time = (new Date([note_arr[1],note_arr[2],'UTC'].join(' ')).toTimeString()).split(' ')[0]
-                    value += `${date};${time}:  ${note}\n\n`
-                    // let datetime = document.createElement('label')
-                    // datetime.innerText = `${date} ${time}`
-                    // datetime.setAttribute('readonly',true)
-                    i--
-                    notecount++
-                }
-                text.value = value
-                text.setAttribute('readonly','true')
-                text.setAttribute('TextMode','MultiLine') //TextMode="MultiLine"
-                text.setAttribute('style','this.style.height = "";this.style.height = this.scrollHeight + "px"') //TextMode="MultiLine"
-                div.appendChild(text)
-                // div.appendChild(datetime)
-                notesdiv.appendChild(div)
-            }
-            
-            
-            // new_notes.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
-            
             document.getElementById('sidebar').classList.add('open-sidebar')
+            
 
         }
         
