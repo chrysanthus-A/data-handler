@@ -257,10 +257,10 @@ export function Notes(opt){
     return (
         <>
         <label htmlFor="notestext" className='noteslabel'>Notes</label>
-        <textarea name="notestext" id="notestext" ></textarea>
+        <textarea name="notestext" id="notestext" onKeyDown={(event) =>{if (event.key ==='Enter' && !event.shiftKey) {opt.onclick()}}} ></textarea>
         <div className='NotesPopupBtn'>
             {/* <Button function = {notesSidebar} id = {opt.id} desc ='View History'/> */}
-            <Button function = {closeNsubmit} id = {opt.id} desc ='SUBMIT'/>
+            <Button function = {closeNsubmit} id = {opt.id} desc ='Submit Notes'/>
         </div>
         </>
     )

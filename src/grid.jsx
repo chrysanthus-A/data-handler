@@ -8,6 +8,7 @@ import { DataGridPremium ,
     GridToolbar,useGridApiContext,
     DEFAULT_GRID_AUTOSIZE_OPTIONS
     } from '@mui/x-data-grid-premium';
+import { borders } from '@mui/system';
 import {Displaygrid} from './index.jsx'
 import papaparse  from 'papaparse'
 import './App.css'
@@ -218,26 +219,30 @@ export function Datagrid(opt) {
                 let usernotes = usernotes_full.slice(0,notes_length)
                 let len = usernotes.length
                 console.log(usernotes)
+                let div = document.createElement('div')
+                let text = document.createElement('textarea')
+                let value =''
                 while(i>0 && len>notecount){
                     console.log('condition',(i>0 && usernotes.length>notecount))
                     let note = usernotes.pop()
                     let note_arr =note.split(';;;')
                     note = note_arr[0]
                     let date = note_arr[1]
-                    let time = note_arr[2]
-                    let div = document.createElement('div')
-                    let text = document.createElement('textarea')
-                    text.value = note
-                    let datetime = document.createElement('label')
-                    datetime.innerText = `${date} ${time}`
-                    datetime.setAttribute('readonly',true)
-                    text.setAttribute('readonly','true')
-                    div.appendChild(text)
-                    div.appendChild(datetime)
-                    notesdiv.appendChild(div)
+                    let time = (new Date([note_arr[1],note_arr[2],'UTC'].join(' ')).toTimeString()).split(' ')[0]
+                    value += `${date};${time}:  ${note}\n\n`
+                    // let datetime = document.createElement('label')
+                    // datetime.innerText = `${date} ${time}`
+                    // datetime.setAttribute('readonly',true)
                     i--
                     notecount++
                 }
+                text.value = value
+                text.setAttribute('readonly','true')
+                text.setAttribute('TextMode','MultiLine') //TextMode="MultiLine"
+                text.setAttribute('style','this.style.height = "";this.style.height = this.scrollHeight + "px"') //TextMode="MultiLine"
+                div.appendChild(text)
+                // div.appendChild(datetime)
+                notesdiv.appendChild(div)
             }
             
             
@@ -444,11 +449,13 @@ export function Datagrid(opt) {
     }
     // console.log((Object.keys(notesdef['0']).includes(String(5))) ?  'noted' : ' sqd')
     return (
-        <Box sx={{ height: '95%', width: '100%' , zIndex : 0 }} >
+        <Box sx={{ height: '95%', width: 'fit-content' , zIndex : 0 , border:1,}}>
         <DataGridPremium 
             rowHeight={25}
             onCellClick={handleCellClick}
-            experimentalFeatures={{ ariaV7: false }}
+            showColumnVerticalBorder
+            showCellVerticalBorder
+            experimentalFeatures={{ ariaV7: true }}
             rows={rows}
             columns={cols}
             initialState={{
