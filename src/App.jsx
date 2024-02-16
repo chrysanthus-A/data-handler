@@ -1,30 +1,25 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter,Route,Routes } from 'react-router-dom'
+import {DataStart} from './pages/index'
 import './App.css'
+import './index.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const form = ReactDOM.createRoot(document.getElementById('form'));
+const base= '/data-handler/'
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Data Handling</h1>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path = {base} element = {<DataStart />} />
+          <Route path={`${base}home`} element ={<></>} />
+        </Routes>
+      </BrowserRouter>
+    </div>  
   )
 }
 
-export default App
+form.render(<App />)
+
+

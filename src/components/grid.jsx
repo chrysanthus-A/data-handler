@@ -5,13 +5,12 @@ import {Button,Input,AddcolPopup,Notes} from './inputs.jsx'
 import { Sidebar } from './sidebar.jsx';
 import { DataGridPremium ,
     GridToolbarContainer,
-    GridToolbar,useGridApiContext,
+    GridToolbar,useGridApiContext,useGridApiEventHandler,
     DEFAULT_GRID_AUTOSIZE_OPTIONS
     } from '@mui/x-data-grid-premium';
-import { borders } from '@mui/system';
-import {Displaygrid} from './index.jsx'
+import {Displaygrid} from '../pages/index.jsx'
 import papaparse  from 'papaparse'
-import './App.css'
+import '../App.css'
 
 // globalvars
 let baseURL = 'https://chrysrex.pythonanywhere.com/'
@@ -132,6 +131,7 @@ export function Datagrid(opt) {
     const [cell_data, Set_cellData] = useState(' ')
     const [cell_field,Set_cellfield] = useState(' ')
     const [cell_id,Set_cellID] = useState(' ')
+    const [row_ids,update_ids] = useState([])
 
     useEffect(()=>{
         console.log('headercount',nos_cols)
@@ -159,7 +159,12 @@ export function Datagrid(opt) {
         );
     const [expand, setExpand] = React.useState(DEFAULT_GRID_AUTOSIZE_OPTIONS.expand);
     
-    
+    const handleRowClick = (params,event)=>{
+        // console.log(params)
+        update_ids(params)
+        
+    }
+
     const handleCellClick = async (params,event) =>{
         const recordnotes=async () => {
             if (notesdef[params.field][params.id] === undefined){
@@ -201,46 +206,25 @@ export function Datagrid(opt) {
             notes_div.style.visibility = 'hidden'            
             notes_value.value = ''
             document.getElementById('sidebar').classList.add('open-sidebar')
-            
-
         }
-        
-
-    
-        // async function displaynotes() {
-            
-        //     const recordnotes=() => {
-        //         notesdef[params.field][params.id]=notes_value.value
-        //         update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
-        //     }
-        //     await pop.render(<Notes parentId ='popup' id = 'notespopup' onclick = {recordnotes} SidebarID = 'sidebar' />)
-        //     let notes_value = document.getElementById('Notes')
-            
-        //     if (Object.keys(notesdef[params.field]).includes(String(params.id))){
-        //         notes_value.value = notesdef[params.field][params.id]
-        //     }
-        //     else {notes_value.value = ''}
-            
-        //     notes_div.style.visibility = 'hidden'
-            
-        //     let notespopup = document.getElementById('popup')
-        //     notespopup.classList.add('open-popup')
-        // }
     }    
 
     function CustomToolbar() {
         const Apiref = useGridApiContext()
+        useGridApiEventHandler(Apiref, 'rowSelectionChange', handleRowClick)
         return (
             <GridToolbarContainer>
                 <GridToolbar />
                 <Button desc = 'AUTOFIT' function={() => Apiref.current.autosizeColumns(autosizeOptions)} />
                 <Button desc = 'ADD COLUMNS' function = {AddCol} />
+                <Button desc = 'DELETE ROW' function = {()=>{row_ids.forEach(rid =>{Apiref.current.updateRows([{ id: rid, _action: 'delete' }])}) }} />
                 <Button desc ='SAVE' function = {saveasJSON} id='download' />
                 <Input ID = 'Formula' width = 'fit-content' height = '25px' margin = '5px' fsize = '18px' value = {cell_data}/>
                 <Button desc = 'EDIT FORMULA' function = {Editcell}/>
                 <Button desc = "DEV" function = {details}/>
             </GridToolbarContainer>
         );
+
         function details(){
             console.log('coldata' ,Apiref.current.getAllColumns())
             console.log('rowmodel',Apiref.current.getRowModels())
@@ -400,15 +384,16 @@ export function Datagrid(opt) {
         })
         return f
     }
-    // console.log((Object.keys(notesdef['0']).includes(String(5))) ?  'noted' : ' sqd')
+    
     return (
-        <Box sx={{ height: '95%', width: 'fit-content' , zIndex : 0 , border:1,}}>
+        <Box sx={{ height: '100%', width: '100%' , zIndex : 0 , border:1,}}>
         <DataGridPremium 
             rowHeight={25}
+            columnHeaderHeight={40}
             onCellClick={handleCellClick}
             showColumnVerticalBorder
             showCellVerticalBorder
-            experimentalFeatures={{ ariaV7: true }}
+            experimentalFeatures={{ ariaV7: true,lazyLoading: true }}
             rows={rows}
             columns={cols}
             initialState={{
@@ -423,7 +408,7 @@ export function Datagrid(opt) {
             
             }}
             pagination
-            pageSizeOptions={[opt.pagesize/2,opt.pagesize,opt.pagesize*1.5,opt.pagesize*2,opt.pagesize*2.5 ]}
+            pageSizeOptions={[opt.pagesize/2,opt.pagesize/1.5,opt.pagesize,opt.pagesize*1.5,opt.pagesize*2 ]}
             checkboxSelection
             disableRowSelectionOnClick
             getCellClassName={(params)=>{

@@ -14,7 +14,7 @@ export function Sidebar(opt){
         catch(e){
             console.log(`error on clearing notesdiv ${e}`)
         }
-        if (Object.keys(opt.notes[opt.cell_field]).includes(String(opt.cell_id))){
+        if (Object.keys(opt.notes).includes(String(opt.cell_field)) && Object.keys(opt.notes[opt.cell_field]).includes(String(opt.cell_id))){
             let usernotes_full = JSON.parse(JSON.stringify(opt.notes[opt.cell_field][opt.cell_id]))
             let i = notes_length
             let notecount = 0
@@ -54,6 +54,7 @@ export function Sidebar(opt){
     return(
         <>
             <div id='exitdiv'><button id = 'exit' type = 'button' onClick={CloseSidebar}>X</button></div>
+            <label htmlFor="notestext" className='noteslabel'>Notes</label>
             <div id='notessection'>
                 <NotesSection notes = {opt.notes}/>
             </div>

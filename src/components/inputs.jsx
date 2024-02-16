@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import {processdata} from './grid'
 import { Sidebar } from './sidebar';
 
-import './App.css'
+import '../App.css'
 
 export const TargetBox = (props) => {
     const { onDrop } = props
@@ -261,11 +261,10 @@ export function Notes(opt){
     }
     return (
         <>
-        <label htmlFor="notestext" className='noteslabel'>Notes</label>
         <textarea name="notestext" id="notestext" onKeyDown={(event) =>{if (event.key ==='Enter' && !event.shiftKey) {event.preventDefault();onEnter()}}} ></textarea>
         <div className='NotesPopupBtn'>
             {/* <Button function = {notesSidebar} id = {opt.id} desc ='View History'/> */}
-            <Button function = {closeNsubmit} id = {opt.id} desc ='Submit Notes'/>
+            <Button function = {closeNsubmit} id = {opt.id} desc ='➩'/>
         </div>
         </>
     )
