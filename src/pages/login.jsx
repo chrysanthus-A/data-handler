@@ -5,6 +5,6 @@ import { Login } from '../components/user_login';
 
 let api = 'https://chrysrex.pythonanywhere.com/'
 const leftainer = ReactDOM.createRoot(document.getElementById('left-pane'))
-leftainer.render(<Login  base = {api} on_success = 'home.html'/>)
+leftainer.render(<Login  base = {api} on_success = 'home'/>)
     
 
