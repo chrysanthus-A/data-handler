@@ -7,11 +7,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import '../index.css';
 const griddiv = ReactDOM.createRoot(document.getElementById('grid'));
-// const form = ReactDOM.createRoot(document.getElementById('form'));
+const form = ReactDOM.createRoot(document.getElementById('form'));
 
-export function DataStart() {
-  console.log('hello form data start')
-  return(
+// export function DataStart() {
+//   console.log('hello form data start')
+  form.render(
   <React.StrictMode>
     <div className='fileInput' id='fileInput'>
       <DndProvider backend={HTML5Backend}>
@@ -19,7 +19,7 @@ export function DataStart() {
       </DndProvider>
     </div>
   </React.StrictMode>);
-}
+// }
 
 export function Displaygrid(){
   let dragspace = document.getElementById('fileInput')

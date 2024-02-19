@@ -40,7 +40,7 @@ const time_req = new Request(baseURL+'/time',time_reqOptions)
 // fUnctions
 const get_type = (content) =>{
     content =content.replace(/,/g, '')
-    if (isNaN(content)) {return ('string')}
+    if (isNaN(content)||content==='') {return ('string')}
     else { return ('number')}
 
 }
@@ -53,13 +53,18 @@ export function clearChild(parent){
 }
 const obtainsampledata = (dataset)=>{
     let x = 0
-    while ( x <= dataset.length) {
-    let sample = dataset[x]    
-    if (!(sample.includes('') || sample.includes(' '))){
+    let sample = dataset[x]
+    while ( x <= 10) {
+    sample = dataset[x] 
+    try{   
+        if (!(sample.includes('') || sample.includes(' '))){
         return sample
         }
+    }
+    catch(e){console.log(e)}
     x+=1
     }
+    return sample
 }
 export async function processdata(data,ext) {   
     if (!(ext ==='json')){
@@ -91,7 +96,7 @@ export async function processdata(data,ext) {
         var datadict = { id : rowID}
         rowID +=1
         for (let key of keys){
-            if (isNaN(element[key])) {var data =element[key]}
+            if (isNaN(element[key])|| element[key]==='') {var data =element[key]}
             else {var data = Number(element[key])}
 
             datadict[headers[key]] = data   ; 
@@ -194,8 +199,8 @@ export function Datagrid(opt) {
             document.getElementById('sidebar').classList.remove('open-sidebar') 
         }
         if (event.ctrlKey){
-            var left = String(event.clientX) + 'px'
-            var top = String(event.clientY) + 'px'
+            var left = String(document.documentElement.scrollLeft+event.clientX) + 'px'
+            var top = String(document.documentElement.scrollTop+event.clientY) + 'px'
             notes_div.style.visibility = 'visible'
             notes_div.style.left = left
             notes_div.style.top = top
@@ -286,7 +291,6 @@ export function Datagrid(opt) {
             let myOptions = {
                 method : 'POST',
                 body : JSON.stringify({data:savedJson,file:filename}),
-                'Access-Control-Allow-Origin': '*',
             }
             let req = new Request(baseURL+param,myOptions)  
             const response = await fetch(req)
@@ -324,9 +328,10 @@ export function Datagrid(opt) {
     }
     function parseForlumaString(formula){
         let val = formula
-        let val_str = ''
+        let val_str ;
         let opr = ['+','-','*','/']
         if (val ===''){val_str = ' ';}
+        else if (val.includes('/js/')){val_str = val.split('/js/')[1]}
         else if(header.some(ele =>val.includes(ele))) {
             let val_arr = val.split(' ')
             // console.log(val_arr)
@@ -346,6 +351,7 @@ export function Datagrid(opt) {
         let val = formula.value.trim()
         coldefs[col_name] = val
         notesdef[col_name] = {}
+        
         update_notes(Object.fromEntries(Object.entries(notesdef).slice(0)))
         var n_col = {headerName:col_name , field : col_name, editable : true, minWidth:null, headerClassName : 'grid-header'}
         let val_str = parseForlumaString(val)

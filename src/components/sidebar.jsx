@@ -6,7 +6,7 @@ import { clearChild } from './grid'
 
 export function Sidebar(opt){
     function NotesSection(){
-        let notes_length = '9'
+        let notes_length = '19'
         const notesdiv = document.getElementById('notessection')
         try {
             clearChild(notesdiv)

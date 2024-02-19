@@ -1,5 +1,10 @@
-import React from 'react';
+import React  from 'react'
 import ReactDOM from 'react-dom/client';
+import { Login } from '../components/user_login';
 
 
-let base = 'http://127.0.0.1:80'
+let api = 'http://chrysrex.pythonanywhere.com/'
+const leftainer = ReactDOM.createRoot(document.getElementById('left-pane'))
+leftainer.render(<Login  base = {api} on_success = 'home.html'/>)
+    
+

@@ -249,8 +249,8 @@ export function Notes(opt){
         opt.onclick(); 
     }
     async function onEnter(){
-        await opt.onclick()
         let text = document.getElementById('notestext')
+        if (!(text.value === '')){ await opt.onclick()}
         text.value = ''
     }
 
