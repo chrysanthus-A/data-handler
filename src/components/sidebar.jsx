@@ -5,10 +5,11 @@ import { clearChild } from './grid'
 
 
 export function Sidebar(opt){
-    function NotesSection(){
+    function NotesSection(options){
         let notes_length = '19'
         const notesdiv = document.getElementById('notessection')
         try {
+            
             clearChild(notesdiv)
         }
         catch(e){
@@ -42,6 +43,7 @@ export function Sidebar(opt){
             div.appendChild(text)
             // div.appendChild(datetime)
             notesdiv.appendChild(div)
+            return null
         }
         
     }

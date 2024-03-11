@@ -15,9 +15,15 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.15.6",
+    "@mantine/core": "^7.6.1",
+    "@mantine/hooks": "^7.6.1",
+    "@mantine/notifications": "^7.6.1",
+    "@mui/material": "^5.15.10",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.16",
     "@mui/x-data-grid": "^6.19.2",
     "@mui/x-data-grid-premium": "^6.19.2",
+    "@mui/x-tree-view": "^6.17.0",
+    "@tabler/icons-react": "^2.47.0",
     "clsx": "^2.1.0",
     "dotenv": "^16.4.1",
     "papaparse": "^5.4.1",
@@ -26,7 +32,10 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",
-    "require": "^0.4.4"
+    "require": "^0.4.4",
+    "styled-components": "^6.1.8",
+    "tabler": "^1.0.0-alpha.8",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",

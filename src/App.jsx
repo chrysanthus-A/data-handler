@@ -1,25 +1,14 @@
-import { useState } from 'react'
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter,Route,Routes } from 'react-router-dom'
-import {DataStart} from './pages/index'
-import './App.css'
-import './index.css'
 
-const form = ReactDOM.createRoot(document.getElementById('form'));
-const base= '/data-handler/'
-export default function App() {
-  return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path = {base} element = {<DataStart />} />
-          <Route path={`${base}home`} element ={<></>} />
-        </Routes>
-      </BrowserRouter>
-    </div>  
-  )
+
+export let base =  'https://chrysrex.pythonanywhere.com/'
+// let current_data = {}
+export async function getData(param,options){
+    let token = window.sessionStorage.getItem('token')
+    options.headers = {auth:token||null}
+    let req = new Request(base+param,options)
+    let data=  await fetch(req)
+    data = await data.json()
+    try{data.code!==200 ? window.location.replace('/data-handler/login'): null}
+    catch{}   
+    return data.data
 }
-
-form.render(<App />)
-
-

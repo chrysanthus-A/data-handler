@@ -1,6 +1,8 @@
 import React ,{useEffect,useState} from 'react'
 import ReactDOM from 'react-dom/client';
 import Box from '@mui/material/Box';
+import { IconX, IconCheck } from '@tabler/icons-react'
+
 import {Button,Input,AddcolPopup,Notes} from './inputs.jsx'
 import { Sidebar } from './sidebar.jsx';
 import { DataGridPremium ,
@@ -8,17 +10,29 @@ import { DataGridPremium ,
     GridToolbar,useGridApiContext,useGridApiEventHandler,
     DEFAULT_GRID_AUTOSIZE_OPTIONS
     } from '@mui/x-data-grid-premium';
-import {Displaygrid} from '../pages/index.jsx'
+import {Displaygrid,gethierarchy} from '../pages/index.jsx'
 import papaparse  from 'papaparse'
+
+import '@mantine/core/styles/global.css';
+import '@mantine/core/styles/Notification.css';
+import '@mantine/core/styles/Loader.css';
+
+
 import '../App.css'
+import {base,getData} from '../App.jsx'
+
+
+import { MantineProvider } from '@mantine/core';
+import { Notification, rem } from '@mantine/core';
 
 // globalvars
-let baseURL = 'https://chrysrex.pythonanywhere.com/'
+// let baseURL = 'https://chrysrex.pythonanywhere.com/'
+let baseURL = base
 var columnDefs = []
 var rowData = []
 var headers = []
 var coldefs = {}
-let notesdict = {}
+var notesdict = {}
 
 // global div elements/react roots
 
@@ -26,13 +40,14 @@ const side = ReactDOM.createRoot(document.getElementById('sidebar'))
 const pop = ReactDOM.createRoot(document.getElementById('popup'));
 let head_list  = document.getElementById('headerslist')
 let notes_div = document.getElementById('notes')
+let notification = document.getElementById('Notification')
+const notify = ReactDOM.createRoot(notification)
 let notes = ReactDOM.createRoot(notes_div)
 let nos_cols = 0
 
 // API requests
 const time_reqOptions = {
     method : 'GET',
-    'Access-Control-Allow-Origin' : '*'
 }
 const time_req = new Request(baseURL+'/time',time_reqOptions)
 
@@ -123,7 +138,25 @@ export async function processdata(data,ext) {
     
 } 
 
-
+function NotificationSystem({saving = false, success= false}){
+    const closealert = () => {
+        notification.style.visibility = 'hidden'
+    }
+    if (saving){
+        notification.style.visibility = 'visible'
+        return(<MantineProvider>
+            <Notification loading={true} title = 'Saving in Progress' onClose={closealert}>Please Wait while the file is being saved</Notification>
+            </MantineProvider>)
+    }
+    if (success) {
+        const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />;
+        notification.style.visibility = 'visible'
+        // return(<Notification  title = 'File Saved' icon = {IconCheck} onClose={closealert}>File Saved Successfully</Notification>)
+        return(<MantineProvider>
+            <Notification  title = 'File Saved' icon ={checkIcon} onClose={closealert}>File Saved Successfully</Notification>
+            </MantineProvider>)
+    }
+}
 
 
 export function Datagrid(opt) {
@@ -208,8 +241,11 @@ export function Datagrid(opt) {
         }   
 
         async function displaynotes() {
-            notes_div.style.visibility = 'hidden'            
-            notes_value.value = ''
+            notes_div.style.visibility = 'hidden'
+            try{            
+                notes_value.value = ''
+            }
+            catch(e){console.log(e)}
             document.getElementById('sidebar').classList.add('open-sidebar')
         }
     }    
@@ -280,21 +316,24 @@ export function Datagrid(opt) {
         }
 
         async function saveasJSON(){
+            notify.render(<NotificationSystem saving={true} />)
+            let hier = gethierarchy()
             let rowdef = Apiref.current.getRowModels()
             rowdef = [...rowdef.values()]
             // let coldef = Apiref.current.getDataAsCsv() 
             let colformat = Apiref.current.getAllColumns()
             var head = Object.keys(rowdef[0])
             let savedJson = {coldef : head , rows : rowdef ,formula : coldefs , colformat :colformat ,notes:notesdef}
-            let filename = document.title.split('.').slice(0,document.title.split('.').length -1) + '.json'
+            let filename = document.title //filename not needed anymore--to be removed
             let param = '/save'
             let myOptions = {
                 method : 'POST',
-                body : JSON.stringify({data:savedJson,file:filename}),
+                body : JSON.stringify({data:savedJson,file:filename,workspace:hier.ws,project:hier.pj,page:hier.pg||null}),
             }
-            let req = new Request(baseURL+param,myOptions)  
-            const response = await fetch(req)
-            console.log(response)  
+            // let req = new Request(baseURL+param,myOptions)  
+            const response = await getData(param, myOptions)
+            console.log(response) 
+            notify.render(<NotificationSystem success={true}/>)
             // download(savedJson,filename)
             // console.log(colformat)
         }
@@ -328,7 +367,7 @@ export function Datagrid(opt) {
     }
     function parseForlumaString(formula){
         let val = formula
-        let val_str ;
+        let val_str='' ;
         let opr = ['+','-','*','/']
         if (val ===''){val_str = ' ';}
         else if (val.includes('/js/')){val_str = val.split('/js/')[1]}

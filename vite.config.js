@@ -15,7 +15,8 @@ export default defineConfig({
     emptyOutDir:true,
     rollupOptions:{
       input:{
-        main:resolve(root,'index.html'),
+        login:resolve(root,'index.html'),
+        workspace:resolve(root,'workspace.html'),
         home:resolve(root,'home.html')
       }
     }

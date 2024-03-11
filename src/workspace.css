@@ -1,0 +1,294 @@
+:root{
+    --headerheight:70px;
+    --header-border-radius:4px;
+}
+body {
+margin: 0px;
+height: 100%;
+width: 100%;
+position: relative;
+}
+
+.header-container {
+    height: var(--headerheight);
+    width: 100%;
+    background-color: rgb(42, 42, 235,0.8);
+    border-bottom-left-radius: var(--header-border-radius);
+    border-bottom-right-radius: var(--header-border-radius);
+    margin: 0.3px;
+}
+
+.logo {
+    height: 70px;
+    scale: 0.8;
+    
+}
+#header-dropdown{
+    transform: translate(5px,-28px);
+    border: none;
+    box-shadow: none;
+    margin: none;
+    font-size: larger;
+    background-image: linear-gradient(to right,rgb(8, 28, 83) 20%,rgb(42, 42, 235,0.8) );
+    color: white;
+    height: calc(var(--headerheight));
+    width: fit-content;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.items {
+    background-color: rgba(69, 69, 211, 0.5);
+    color: black;
+}
+#pgram{
+    width: 500px;
+    height: var(--headerheight);
+    border-bottom: 100px solid red; /* bottom side */
+    border-left: 50px solid transparent; /* left side */
+    margin-left: 50px; /* adjust width */
+}
+.main-container {
+    /* box-sizing: border-box; */
+    width: auto;
+    padding: 20px;
+    height: fit-content;
+    left: 50%;
+    right: 50%; 
+    margin-top: 5%;
+    border: 1px groove black;
+    border-radius: 15px;
+    /* border: 5px solid transparent; */
+}
+.managebuttons{
+    width: 100%;
+    border: inherit;
+    border-bottom: none;
+    border-radius: inherit;
+    height: var(--headerheight);
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgb(118, 118, 180,0.2);
+    
+}
+.managebuttons button {
+    --content:calc(fitcontent);
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+    height: 50px;
+    border: 2px solid rgb(19, 157, 231);
+    width: calc(var(--content) + 157px);
+    cursor: pointer;
+    
+}
+.managebuttons button-clicked {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 15px;
+    height: 50px;
+    border: 1px solid rgb(24, 23, 23,0.7);
+    cursor: pointer;
+    background-color: inherit;
+}
+.files{
+    width: 100%;
+    height: fit-content;
+    margin-top: 2px;
+    border: inherit;
+    border-top: none;
+    border-radius: inherit;
+    /* height: var(--headerheight); */
+    /* background-color: rgb(118, 118, 180,0.2); */
+}
+.popup {
+    margin : 5px;
+    padding: 5px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    box-shadow: 1.5px 1.5px 1.5px 1.5px rgba(27, 27, 27, 0.5);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0.1);
+    background-color: rgba(149, 152, 163, 0.9);
+    color: rgba(8, 8, 8, 0.9);
+    align-items:center;
+    justify-content:space-between;
+    width: fit-content;
+    height:fit-content;
+    display:flex; 
+    flex-wrap:nowrap;
+    font-size: larger;
+    visibility: hidden;
+    transition:  transform 0.2s, top 0.2s;
+    z-index: 1;
+    
+}
+
+.open-popup {
+    visibility: visible;
+    transform: translate(-50%,0%) scale(1);
+    top: 50%;
+} 
+.open-popup2 {
+    visibility: visible;
+    transform: translate(-50%,50%) scale(1);
+    top: 50%;
+} 
+
+.container{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid transparent;
+    border-radius: inherit;
+    border: 2px groove black;
+    height : fit-content;
+    width: fit-content;
+    position: relative;
+}
+.exitButton {
+    margin: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.exitButton button {
+    background-color: rgb(207, 24, 24);
+    color: white;
+    height: 30px;
+}
+.exitButton label{
+    margin: 0 37% 0 35%;
+    width: fit-content;
+    
+}
+.tabs {
+    height:30px;
+    width: 700px;
+    margin: 0 10px 0 10px;
+    border-bottom: transparent;    
+}
+
+
+.tabBtns{
+    margin:9px 7px 0px 4px;
+    width: 100px;
+    height:24px;
+    background-color: rgb(204, 204, 204);
+}   
+.btn-clicked { 
+    background-color: rgba(149, 152, 163, 01);
+    border-bottom: none;
+    border-bottom-left-radius: -5px;
+    border-bottom-right-radius: -5px;
+}
+
+
+.main {
+    display: flex;
+    width: auto;
+    margin: 2px 10px 10px 10px;
+    height: 398px;
+    border:1px solid black;
+    
+}
+
+.lists {
+    height: auto;
+    margin:0 0 10px 0;
+    width: 70%;
+    border: 1px solid black;
+    border-top: none;
+}
+.actions {
+    height: auto;
+    margin: 0 0 10px 0;
+    width: 30%;
+    border-top: none;
+    display: grid;
+    gap: 5px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 5px;
+}
+.actions button{
+    width:70%;
+    justify-self: center;
+    height: 40px;
+    background-color: aliceblue;
+    cursor: pointer;
+}
+.MuiTreeView-root{
+    display: block;
+    width :100%;
+    background-color: inherit;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+
+
+/* add workspace CSS */
+.container2{
+    border: 2px groove black;
+    border-radius: inherit;
+    position: relative;
+    height: 315px;
+    width: 500px;
+    display: grid;
+    gap: 15pxpx;
+}
+.ws-name-input {
+    margin: 5px;
+    display: flex;
+    gap: 15px;
+    height: var(--headerheight);
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+.ws-name{
+    width: 470px;
+    height: 50px;
+}
+.ws-name-input label {
+    font-size: x-large;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: var(--headerheight);
+}
+
+.submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+#error-log {
+    font-size: large;
+    font-weight: unset;
+    color: rgb(204, 10, 10);
+    display: flex;
+    justify-content: start;
+    padding-left: 20px;
+}
+
+#Workspaces{
+    color: rgb(61, 61, 247);
+    text-decoration: underline;
+}
+#Projects{
+    color:rgb(34, 48, 240);
+    text-decoration:unset;
+}
+#Pages{
+    color:rgb(28, 68, 245);
+    text-decoration:none;
+}
+
+

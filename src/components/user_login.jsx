@@ -1,8 +1,12 @@
 import React ,{useEffect,useState} from 'react'
 import ReactDOM from 'react-dom/client';
 import eye from '../assets/eye.svg'
+// import {updatesession} from '../App.jsx'
 
-// props:{submitFunction}
+// (props)= login_label , create_label, alt_create , alt_login, on_success
+// TODO: add Enter event handling for the input for username and password
+
+
 export function Login (opt){
     //consts
     // const[Func,set_func] = useState(checkCredentials)
@@ -11,7 +15,7 @@ export function Login (opt){
     const[alt_login,set_altLogin] = useState((opt.alt_login === undefined)? 'Create New Account?':opt.alt_login)
     const[alt_create,set_altCreate] = useState((opt.alt_create === undefined)? 'Login Using Existing Account':opt.alt_create)
     let base = opt.base
-
+    
 
 
     async function checkCredentials(){
@@ -21,8 +25,7 @@ export function Login (opt){
         const status = document.getElementById('status')
         const apiOptions = {
             method : 'post' ,
-            body : JSON.stringify({user:username.value,pwd:password.value}),
-
+            body : JSON.stringify({user:username.value,pwd:password.value})
         }
         console.log(base+param)
         const req = new Request(base+param,apiOptions)
@@ -31,6 +34,7 @@ export function Login (opt){
         console.log(resp)
         status.innerHTML = resp.auth
         if (resp.code===200){
+            window.sessionStorage.setItem('token',resp.auth_token)
             let forward = document.createElement('a')
             forward.href=opt.on_success
             document.body.appendChild(forward)
@@ -58,16 +62,14 @@ export function Login (opt){
     }
     async function switchmethod(){
         //DOMs
+        // console.log(session)
+        // console.log(get_current_session())
         const alt_option = document.getElementById('createlabel')
         const action = document.getElementById('action')
         const LoginBtn = document.getElementById('loginbutton')
         const RegisterBtn = document.getElementById('registerbutton')
         document.getElementById('username').value = ''
         document.getElementById('password').value = ''
-        
-        //action labels
-
-
 
         if (action.innerHTML === login_label){
 
@@ -75,17 +77,15 @@ export function Login (opt){
             alt_option.innerHTML = alt_create
             LoginBtn.style.display = 'none'
             RegisterBtn.style.display= 'block'
-
             }
+
         else if (action.innerHTML === create_label){
 
             action.innerHTML = login_label
             alt_option.innerHTML = alt_login
             LoginBtn.style.display = 'block'
             RegisterBtn.style.display= 'none'
-
             }
-
     }
     function showpwd(){
         const password = document.getElementById('password') 
@@ -98,7 +98,6 @@ export function Login (opt){
             password.type = "password";
             }
     }
-    // (props)= login_label , create_label, alt_create , alt_login, on_success
     return (
         
             <div className="container">
@@ -126,3 +125,4 @@ export function Login (opt){
     
     )
 }
+

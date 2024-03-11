@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { useMemo } from 'react'
 import {processdata} from './grid'
-import { Sidebar } from './sidebar';
+// import { Sidebar } from './sidebar';
 
 import '../App.css'
 
@@ -72,6 +72,10 @@ async function processfile(files) {
     
 }
 export function FileSelect(opt){
+    if (opt.file){
+        processdata(opt.file,'json')
+    }
+    else{
     const [droppedFiles, setDroppedFiles] = useState([])
     const handleFileDrop = useCallback(
         (item) => {
@@ -89,6 +93,7 @@ export function FileSelect(opt){
             <TargetBox onDrop={handleFileDrop} />
         </>
     )
+    }
 
         // return (
         //     <form runat="server">
@@ -225,10 +230,11 @@ export function PredictiveText(opt) {
     )
 } 
 
-export  function Button(opt){
+//props function,id,desc
+export function Button(opt){
 
     return (
-        <button onClick = {opt.function} id = {opt.id} href =' '>
+        <button onClick = {opt.function} id = {opt.id} >
             {opt.desc}
         </button> 
     )
@@ -254,11 +260,11 @@ export function Notes(opt){
         text.value = ''
     }
 
-    async function notesSidebar() {
+    // async function notesSidebar() {
         
-        await side.render(<Sidebar parentID = {opt.SidebarID} /> )
-        document.getElementById('sidebar').classList.add('open-sidebar')
-    }
+    //     await side.render(<Sidebar parentID = {opt.SidebarID} /> )
+    //     document.getElementById('sidebar').classList.add('open-sidebar')
+    // }
     return (
         <>
         <textarea name="notestext" id="notestext" onKeyDown={(event) =>{if (event.key ==='Enter' && !event.shiftKey) {event.preventDefault();onEnter()}}} ></textarea>

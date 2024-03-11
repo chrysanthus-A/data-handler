@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  color-scheme: light;
 }
 
 .logo {
@@ -403,4 +404,14 @@ text-align: center;
   flex-wrap: nowrap;
   font-size: large;
   border-radius: 5px;
+}
+
+#Notification {
+  position: absolute;
+  right: 5px;
+  top: 15px;
+  height: 70px;
+  width:300px;
+  z-index: 5;
+  visibility:hidden;
 }
