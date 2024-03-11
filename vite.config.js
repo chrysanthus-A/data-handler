@@ -11,6 +11,7 @@ export default defineConfig({
   root,
   plugins: [react()],
   build:{
+    target: "ES2022",
     outDir,
     emptyOutDir:true,
     rollupOptions:{
