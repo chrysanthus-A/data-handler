@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="frontpage.css">
+        <title>Data-Handling</title>
+    </head>
+    <body>
+        <div class="header-container" id ='headdiv'></div>
+        <div id = 'notes'></div>
+        <div class= "left-pane" id = "left-pane"><span>Tree Structure here</span></div>
+        <div class="taskbar stacked" id = 'taskbar'></div>
+        <div id='popup' class='popup'></div>
+        <div class="popup" id = 'popup2'></div>
+        <div id="Notification"></div>
+        <div id="mainContent" class="center"></div>
+        <div id ="sidebar" class= 'sidebar'></div>
+        <div class="right-pane" id = 'objectsbar'></div>
+        <div class="right-pane garbage" id="garbage"></div>
+        <datalist id ='headerslist'></datalist>
+
+        <script type="module" src="./pages/frame.jsx"></script>
+        <script type="module" src="./main.jsx"></script>
+    </body>
+</html>

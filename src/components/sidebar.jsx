@@ -1,7 +1,6 @@
 import React ,{useState,useCallback,useEffect} from 'react'
 import { Notes } from './inputs'
-import { clearChild } from './grid'
-
+import { clearChild } from '../App'
 
 
 export function Sidebar(opt){

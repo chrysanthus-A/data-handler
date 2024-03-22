@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {FileSelect} from '../components/inputs';
 import {Datagrid} from '../components/grid';
+import {FileSelect} from '../components/inputs';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import { currentdata } from './workspaces';
@@ -13,8 +13,11 @@ import '../components/sidebar';
 // import { MantineProvider } from '@mantine/core';
 // import '@mantine/notifications/styles.css'
 import '../index.css';
-const griddiv = ReactDOM.createRoot(document.getElementById('grid'));
-const form = ReactDOM.createRoot(document.getElementById('form'));
+
+const grid = (document.createElement('div'));
+grid.id = 'grid'
+const griddiv = ReactDOM.createRoot(grid)
+// const form = ReactDOM.createRoot(document.getElementById('form'));
 
 // export function DataStart() {
 //   console.log('hello form data start')
@@ -31,27 +34,29 @@ export function gethierarchy(){
   object.pg = pagedata.pg
   return object
 }
-if (!data.defaultpage || data.defaultpage.content.length === 0)
-  form.render(
+if (!data.defaultpage || data.defaultpage.content.length === 0){
+  griddiv.render(
     <div className='fileInput' id='fileInput'>
       <DndProvider backend={HTML5Backend}>
       <FileSelect />
       </DndProvider>
     </div>
   );
+  document.getElementById("mainContent").appendChild(grid)
+}
 else {
-  form.render(
+  griddiv.render(
     <div className='fileInput' id='fileInput'>
       <DndProvider backend={HTML5Backend}>
       <FileSelect  file = {JSON.stringify(data.defaultpage.content)}/>
       </DndProvider>
     </div>
   )
-  // processdata(,'json')
+  // document.getElementById("mainContent").appendChild(grid)
+  
 }
-// }
 
-export function Displaygrid(row,col,head,notes){
+export function Displaygrid(){
   try{
     let dragspace = document.getElementById('fileInput')
   // let inputform = document.getElementById('form')

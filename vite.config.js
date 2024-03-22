@@ -2,6 +2,7 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
+
 // https://vitejs.dev/config/
 
 const root = resolve(__dirname,'src')
@@ -18,7 +19,8 @@ export default defineConfig({
       input:{
         login:resolve(root,'index.html'),
         workspace:resolve(root,'workspace.html'),
-        home:resolve(root,'home.html')
+        // home:resolve(root,'home.html'),
+        home: resolve(root,'frontpage.html')
       }
     }
   }

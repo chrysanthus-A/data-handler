@@ -1,8 +1,6 @@
 import React ,{useEffect,useState} from 'react'
 import ReactDOM from 'react-dom/client';
 import Box from '@mui/material/Box';
-import { IconX, IconCheck } from '@tabler/icons-react'
-
 import {Button,Input,AddcolPopup,Notes} from './inputs.jsx'
 import { Sidebar } from './sidebar.jsx';
 import { DataGridPremium ,
@@ -10,20 +8,8 @@ import { DataGridPremium ,
     GridToolbar,useGridApiContext,useGridApiEventHandler,
     DEFAULT_GRID_AUTOSIZE_OPTIONS
     } from '@mui/x-data-grid-premium';
-import {Displaygrid,gethierarchy} from '../pages/index.jsx'
-import papaparse  from 'papaparse'
-
-import '@mantine/core/styles/global.css';
-import '@mantine/core/styles/Notification.css';
-import '@mantine/core/styles/Loader.css';
-
-
-import '../App.css'
-import {base,getData} from '../App.jsx'
-
-
-import { MantineProvider } from '@mantine/core';
-import { Notification, rem } from '@mantine/core';
+import {base,JSONObject} from '../App.jsx'
+import { NotificationSystem } from './Notification.jsx';
 
 // globalvars
 // let baseURL = 'https://chrysrex.pythonanywhere.com/'
@@ -33,17 +19,15 @@ var rowData = []
 var headers = []
 var coldefs = {}
 var notesdict = {}
-
+let nos_cols = 0
 // global div elements/react roots
 
 const side = ReactDOM.createRoot(document.getElementById('sidebar'))
 const pop = ReactDOM.createRoot(document.getElementById('popup'));
 let head_list  = document.getElementById('headerslist')
 let notes_div = document.getElementById('notes')
-let notification = document.getElementById('Notification')
-const notify = ReactDOM.createRoot(notification)
 let notes = ReactDOM.createRoot(notes_div)
-let nos_cols = 0
+
 
 // API requests
 const time_reqOptions = {
@@ -53,118 +37,17 @@ const time_req = new Request(baseURL+'/time',time_reqOptions)
 
 
 // fUnctions
-const get_type = (content) =>{
-    content =content.replace(/,/g, '')
-    if (isNaN(content)||content==='') {return ('string')}
-    else { return ('number')}
 
-}
-export function clearChild(parent){
-    let child =parent.lastElementChild;
-    while (child){
-        parent.removeChild(child)
-        child = parent.lastElementChild
-    }
-}
-const obtainsampledata = (dataset)=>{
-    let x = 0
-    let sample = dataset[x]
-    while ( x <= 10) {
-    sample = dataset[x] 
-    try{   
-        if (!(sample.includes('') || sample.includes(' '))){
-        return sample
-        }
-    }
-    catch(e){console.log(e)}
-    x+=1
-    }
-    return sample
-}
-export async function processdata(data,ext) {   
-    if (!(ext ==='json')){
-    // console.log(csvtext)
-    var data =  await papaparse.parse(data)
-    var griddata = [data['data']][0]
-    headers  = griddata[0]
-    var actual_data= griddata.slice(1)
-    let x =0
-    let sampledata = obtainsampledata(actual_data)
-    var new_headers = []
-    headers.forEach(element => {
-        let headname =element
-        let len = element.split(' ').length
-        if (len>1){
-            headname = element.split(' ').join('_')
-        }
-        columnDefs.push({headerName:headname ,field: headname, minWidth : null, editable : true,type : get_type(sampledata[headers.indexOf(element)]), headerClassName : 'grid-header'})
-        coldefs[headname] = '' 
-        new_headers.push(headname)
-        notesdict[headname]={}   
-    });
-    headers = new_headers
 
-    
-    var rowID = 1
-    actual_data.forEach(element => {
-        var keys = element.keys()
-        var datadict = { id : rowID}
-        rowID +=1
-        for (let key of keys){
-            if (isNaN(element[key])|| element[key]==='') {var data =element[key]}
-            else {var data = Number(element[key])}
-
-            datadict[headers[key]] = data   ; 
-        };
-        rowData.push(datadict)
-    })}
-    else if (ext==='json'){
-        data = await JSON.parse(data)
-        columnDefs = data['colformat']
-        columnDefs.forEach(element =>{
-            element['maxWidth'] = Infinity
-            element['minWidth'] = null
-        })
-        console.log(data['colformat'])
-        rowData = data['rows']
-        coldefs = data['formula']
-        headers = data['coldef']
-        notesdict = data['notes'] 
-        // console.log(rowData,columnDefs,data['formula'])
-    }
-    else {console.log('file not supported')}
-    // console.log(columnDefs)
-    Displaygrid()
-    
-} 
-
-function NotificationSystem({saving = false, success= false}){
-    const closealert = () => {
-        notification.style.visibility = 'hidden'
-    }
-    if (saving){
-        notification.style.visibility = 'visible'
-        return(<MantineProvider>
-            <Notification loading={true} title = 'Saving in Progress' onClose={closealert}>Please Wait while the file is being saved</Notification>
-            </MantineProvider>)
-    }
-    if (success) {
-        const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />;
-        notification.style.visibility = 'visible'
-        // return(<Notification  title = 'File Saved' icon = {IconCheck} onClose={closealert}>File Saved Successfully</Notification>)
-        return(<MantineProvider>
-            <Notification  title = 'File Saved' icon ={checkIcon} onClose={closealert}>File Saved Successfully</Notification>
-            </MantineProvider>)
-    }
-}
 
 
 export function Datagrid(opt) {
 
-    let [rows,update_rows] = useState(rowData)
-    let [cols,update_cols] = useState(columnDefs)
-    let [header,update_header] = useState(headers)
-    let [notesdef,update_notes] = useState(notesdict)
+    let [rows,update_rows] = useState(opt.rowData)
+    let [cols,update_cols] = useState(opt.columnDefs)
+    let [header,update_header] = useState(opt.headers)
+    let [notesdef,update_notes] = useState(opt.notesdict)
+    let [coldefs,update_form] = useState(opt.formulas)
     
     const [cell_data, Set_cellData] = useState(' ')
     const [cell_field,Set_cellfield] = useState(' ')
@@ -268,7 +151,8 @@ export function Datagrid(opt) {
 
         function details(){
             console.log('coldata' ,Apiref.current.getAllColumns())
-            console.log('rowmodel',Apiref.current.getRowModels())
+            let rows = Apiref.current.getRowModels()
+            console.log('rowmodel',[...rows.values()])
             console.log('notes',notesdef)
 
 
@@ -316,26 +200,18 @@ export function Datagrid(opt) {
         }
 
         async function saveasJSON(){
-            notify.render(<NotificationSystem saving={true} />)
-            let hier = gethierarchy()
+            opt.notify.render(<NotificationSystem state={'saving'} canvas ={'Notification'} />)
+            let hier = opt.page
             let rowdef = Apiref.current.getRowModels()
             rowdef = [...rowdef.values()]
             // let coldef = Apiref.current.getDataAsCsv() 
             let colformat = Apiref.current.getAllColumns()
             var head = Object.keys(rowdef[0])
             let savedJson = {coldef : head , rows : rowdef ,formula : coldefs , colformat :colformat ,notes:notesdef}
-            let filename = document.title //filename not needed anymore--to be removed
-            let param = '/save'
-            let myOptions = {
-                method : 'POST',
-                body : JSON.stringify({data:savedJson,file:filename,workspace:hier.ws,project:hier.pj,page:hier.pg||null}),
-            }
-            // let req = new Request(baseURL+param,myOptions)  
-            const response = await getData(param, myOptions)
-            console.log(response) 
-            notify.render(<NotificationSystem success={true}/>)
-            // download(savedJson,filename)
-            // console.log(colformat)
+            let data = {data:savedJson,workspace:hier.ws,project:hier.pj,page:hier.pg||null}
+            opt.save(data,opt.ID)
+            opt.notify.render(<NotificationSystem state={'success'} canvas ={'Notification'} />)
+            
         }
         function download(data,file,type = 'text/plain'){
 

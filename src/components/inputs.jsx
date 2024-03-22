@@ -1,12 +1,11 @@
 import React ,{useState,useCallback} from 'react'
-import ReactDOM from 'react-dom/client'
 import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { useMemo } from 'react'
-import {processdata} from './grid'
+import {processdata} from '../App'
 // import { Sidebar } from './sidebar';
 
-import '../App.css'
+// import '../App.css'
 
 export const TargetBox = (props) => {
     const { onDrop } = props
@@ -127,8 +126,8 @@ export function AddcolPopup(opt){
     }
     return(
             <form>
-                <div className='exitButton'>
-                    <button type = 'button' onClick = {closepop}></button>
+                <div className='exitdiv'>
+                    <button type = 'button' onClick = {closepop} id='exit_button'>X</button>
                 </div>
                 <div className='headername'>   
                     <label htmlFor={opt.ID}>{opt.label}</label>
@@ -137,7 +136,9 @@ export function AddcolPopup(opt){
                 <div id = 'formula'>   
                     <PredictiveText datalist={opt.headers.concat(operations)}/>    
                 </div>
-                <button type='button' onClick = {closenSubmit}>SUBMIT</button>
+                <div class='centeredbutton'>
+                    <button type='button' onClick = {closenSubmit}>SUBMIT</button>
+                </div>    
             </form>
     );
 }
