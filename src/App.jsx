@@ -2,8 +2,8 @@ import papaparse  from 'papaparse'
 import largeJSON from 'lodash'
 import {useRef} from 'react'
 
-// export let base =  'https://chrysrex.pythonanywhere.com/' //prod
-export let base =  'http://127.0.0.1:5000' //dev
+export let base =  'https://chrysrex.pythonanywhere.com/' //prod
+// export let base =  'http://127.0.0.1:5000' //dev
 
 export async function getData(param,options){
     let token = window.sessionStorage.getItem('token')
